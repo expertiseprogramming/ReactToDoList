@@ -1,37 +1,44 @@
 import React, {useState} from "react";
+import ToDoItem from "./ToDoItem"
+import InputArea from "./InputArea";
 
 function App() {
-  const [item, onAddItem] = useState("");
 
   const [list, setList] = useState([]);
 
-  function onInputChange(event){
-
-    const value  = event.target.value;
-    console.log(value)
-    onAddItem(value);
-  }
-
-  function onButtonClick(){
+  function onButtonClick(item){
     setList((prevValue) => {
       return [...prevValue, item];
     })
-    onAddItem("");
   }
+
+  function deleteItem(id){
+    setList((prevValue) => {
+      return prevValue.filter(
+        (item, index) => {
+          return index !== id;
+        }
+      )
+    })
+  }
+
   return (
     <div className="container">
       <div className="heading">
         <h1>To-Do List</h1>
       </div>
-      <div className="form">
-        <input onChange = {onInputChange} type="text" name = "list" value={item}/>
-        <button onClick = {onButtonClick}>
-          <span>Add</span>
-        </button>
-      </div>
+      <InputArea
+        buttonAction = {onButtonClick}
+      />
       <div>
         <ul>
-          {list.map((listitem) => <li>{listitem}</li>)}
+          {list.map((listitem, index) =>
+            <ToDoItem
+              item = {listitem}
+              onSelectItem = {deleteItem}
+              key = {index}
+              id = {index}
+            />)}
 
         </ul>
       </div>
